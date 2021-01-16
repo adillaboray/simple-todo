@@ -53,7 +53,7 @@ Vue.component("todo-list", {
       required: true,
     },
   },
-  render(createElemenent, { props, listeners}) {
+  render(createElemenent, { props, listeners }) {
     if (props.items.length) {
       function todoName(name) {
         return createElemenent("p", { class: "has-text-weight-bold" }, name);
@@ -211,9 +211,8 @@ Vue.component("item-modal", {
     },
   },
   render(createElemenent, { props, listeners }) {
-    const self = this;
     const isActive = props.active ? "is-active" : "";
-    let arrayCheck = ["pending", "doing", "done"];
+    const arrayCheck = ["pending", "doing", "done"];
     function radioBoxList(items, checked) {
       return items.map(function (item) {
         return createElemenent("label", { class: "radio" }, [
@@ -232,7 +231,12 @@ Vue.component("item-modal", {
     }
 
     return createElemenent("div", { class: `modal ${isActive}` }, [
-      createElemenent("div", { class: "modal-background" }),
+      createElemenent("div", {
+        class: "modal-background",
+        on: {
+          click: listeners.close,
+        },
+      }),
       createElemenent("div", { class: "modal-card" }, [
         createElemenent("header", { class: "modal-card-head" }, [
           createElemenent("p", { class: "modal-card-title" }, props.data.name),
