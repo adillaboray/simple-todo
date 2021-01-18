@@ -1,38 +1,28 @@
+let STORAGE_KEY = "simpletodo-v1";
+
 const store = new Vuex.Store({
   state: {
-    todos: [
-      {
-        id: 1,
-        name: "Cuci motor",
-        status: "pending",
-      },
-      {
-        id: 2,
-        name: "Cabutin rumput",
-        status: "doing",
-      },
-      {
-        id: 3,
-        name: "Belajar vuex: simple todo",
-        status: "doing",
-      },
-      {
-        id: 4,
-        name: "Belanja kebutuhan",
-        status: "done",
-      },
-    ],
+    todos: [],
   },
   mutations: {
+    fetchTodo(state) {
+      const todoList = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      todoList.forEach(function (todo, index) {
+        todo.id = index;
+      });
+      state.todos = todoList;
+    },
     addTodo(state, payload) {
-      return state.todos.push(payload);
+      state.todos.push(payload);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.todos));
     },
     changeTodo(state, payload) {
-      const item = state.todos.filter(function (todo) {
+      const todoItem = state.todos.filter(function (todo) {
         return todo.id == payload.id;
       });
 
-      return (item.status = payload.status);
+      todoItem.status = payload.status;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.todos));
     },
   },
   getters: {
@@ -261,6 +251,9 @@ Vue.component("item-modal", {
 new Vue({
   el: "#app",
   store: store,
+  created() {
+    this.$store.commit("fetchTodo");
+  },
   data() {
     return {
       modalActive: false,
